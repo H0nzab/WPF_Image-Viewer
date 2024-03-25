@@ -13,19 +13,24 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="30"/>
             <ColumnDefinition Width="300*"/>
             <ColumnDefinition Width="30"/>
             <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
 
         <Button x:Name="chooseImageBtn" Grid.Column="3" Grid.Row="2" Height="40" Width="100" Content="Choose Image" Click="chooseImageBtn_Click"></Button>
         <DockPanel Height="300" Width="300" Grid.Column="3" Grid.Row="1">
             <Image x:Name="DisplayedImage" Grid.Column="3" Grid.Row="1" Stretch="Uniform"/>
         </DockPanel>
-        <TextBlock x:Name="NameOfImage" Grid.Column="3" Grid.Row="0" Height="20" Width="300" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10"/>
+        <TextBlock x:Name="NameOfImage" Grid.Column="3" Grid.Row="0" Height="20" Width="200" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10"/>
+        <StackPanel Grid.Column="1" Grid.Row="1"/>
+        <TextBlock Grid.Column="1" Grid.Row="0" Text="Albums" Height="20" Width="40" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="7"/>
+        <TextBlock Grid.Column="5" Grid.Row="0" Text="Notes" Height="20" Width="40" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="7"/>
+        <Button x:Name="AddNoteBtn" Grid.Column="5" Grid.Row="0" Width="70" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="8" Content="Add Note" Click="AddNoteBtn_Click"/>
+        <StackPanel Grid.Column="5" Grid.Row="1"/>
     </Grid>
 </Window>

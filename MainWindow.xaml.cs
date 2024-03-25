@@ -52,5 +52,11 @@ namespace Image_Viewer
             DisplayedImage.Source = (ImageSource)converter.ConvertFromString(selectedFileName);
 
         }
+
+        private void AddNoteBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Note_Editor note = new Note_Editor();
+            note.ShowDialog();
+        }
     }
 }
