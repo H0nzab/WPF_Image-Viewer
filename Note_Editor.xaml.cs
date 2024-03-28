@@ -19,14 +19,20 @@ namespace Image_Viewer
     /// </summary>
     public partial class Note_Editor : Window
     {
+        public string NoteText => TexboxNote.Text;
         public Note_Editor()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void CancelBtn_Click(object sender, RoutedEventArgs e)
         {
+            this.Close();
+        }
 
+        private void SaveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
         }
     }
 }

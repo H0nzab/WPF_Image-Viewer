@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,10 +22,13 @@ namespace Image_Viewer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly GalleryNotesManager notesManager;
         public MainWindow()
         {
             InitializeComponent();
+            notesManager = new GalleryNotesManager();
         }
+        public string imageName;
 
         private void chooseImageBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -44,19 +48,54 @@ namespace Image_Viewer
 
             string selectedFileName = openFileDialog1.FileName;
             string[] urlOfImage = selectedFileName.Split("\\");
-            string lastPart = urlOfImage[urlOfImage.Length - 1];
+            imageName = urlOfImage[urlOfImage.Length - 1];
 
-            NameOfImage.Text = lastPart;
+            NameOfImage.Text = imageName;
 
             var converter = new ImageSourceConverter();
             DisplayedImage.Source = (ImageSource)converter.ConvertFromString(selectedFileName);
-
+            DisplayNotesForImage(imageName);
         }
 
         private void AddNoteBtn_Click(object sender, RoutedEventArgs e)
         {
-            Note_Editor note = new Note_Editor();
-            note.ShowDialog();
+            Note_Editor newNote = new Note_Editor();
+            if (newNote.ShowDialog() == true)
+            {
+                string note = newNote.NoteText;
+                notesManager.AddOrUpdateNote(imageName, note);
+                DisplayNotesForImage(imageName);
+            }
+        }
+
+        private void DisplayNotesForImage(string imageName)
+        {
+            NotesStackPanel.Children.Clear();
+            var notes = notesManager.GetNotesForImage(imageName);
+
+            foreach (var note in notes)
+            {
+                var noteTextBlock = new TextBlock
+                {
+                    Text = note,
+                    TextAlignment = TextAlignment.Left,
+                    TextWrapping = TextWrapping.Wrap,
+                    Height = 50,
+                    Width = 110,
+                    Margin = new Thickness(5)
+                };
+
+                var noteBorder = new Border
+                {
+                    BorderBrush = System.Windows.Media.Brushes.Black,
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(8),
+                    Margin = new Thickness(5),
+                    Child = noteTextBlock
+                };
+
+                NotesStackPanel.Children.Add(noteBorder);
+            }
         }
     }
 }

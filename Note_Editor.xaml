@@ -18,7 +18,13 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="40"/>
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="1" Grid.Row="1" Margin="10"/>
-        <Button Content="Save" Grid.Column="1" Grid.Row="2" Width="60" Height="30" Click="Button_Click"/>
+        <TextBlock Grid.Row="0" Grid.Column="1" Text="Zadejte poznámku: " VerticalAlignment="Bottom"/>
+        <TextBox x:Name="TexboxNote" Grid.Column="1" Grid.Row="1" Margin="10"/>
+        <DockPanel Grid.Column="1" Grid.Row="2" Width="130" >
+            <Button x:Name="SaveBtn" Content="Save" Width="60" Height="30" HorizontalAlignment="Center" Click="SaveBtn_Click"/>
+            <Button x:Name="CancelBtn" Content="Cancel" Width="60" Height="30" HorizontalAlignment="Right" Click="CancelBtn_Click"/>
+        </DockPanel>
+        
+        
     </Grid>
 </Window>
