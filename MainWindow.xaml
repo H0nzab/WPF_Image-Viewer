@@ -33,9 +33,15 @@
         <Button x:Name="AddNoteBtn" Grid.Column="5" Grid.Row="0" Width="70" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="8" Content="Add Note" Click="AddNoteBtn_Click"/>
         <ScrollViewer Grid.Column="5" Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel x:Name="NotesStackPanel" Orientation="Vertical" Margin="10">
-                <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8">
-                    <TextBlock Height="50" Width="110" TextAlignment="Center" TextWrapping="Wrap" Margin="5"/>
-                </Border>
+                <DockPanel>
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8">
+                        <DockPanel>
+                            
+                            <TextBlock Height="50" Width="100" TextAlignment="Center" TextWrapping="Wrap" Margin="5"></TextBlock>
+                            <Button Height="20" Width="15" Margin="2" Content="X" HorizontalAlignment="Right" VerticalAlignment="Top" Background="White" BorderBrush="White"/>
+                        </DockPanel>
+                    </Border>
+                </DockPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>

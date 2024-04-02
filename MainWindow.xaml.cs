@@ -71,19 +71,39 @@ namespace Image_Viewer
         private void DisplayNotesForImage(string imageName)
         {
             NotesStackPanel.Children.Clear();
-            var notes = notesManager.GetNotesForImage(imageName);
+            var notes = notesManager.GetNotesForImage(imageName).ToList(); // Ensure it's a list for easy removal
 
             foreach (var note in notes)
             {
                 var noteTextBlock = new TextBlock
                 {
                     Text = note,
-                    TextAlignment = TextAlignment.Left,
+                    TextAlignment = TextAlignment.Center,
                     TextWrapping = TextWrapping.Wrap,
                     Height = 50,
-                    Width = 110,
+                    Width = 100,
                     Margin = new Thickness(5)
                 };
+
+                var deleteButton = new Button
+                {
+                    Content = "X",
+                    Height = 20,
+                    Width = 15,
+                    Margin = new Thickness(2),
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Background = System.Windows.Media.Brushes.White,
+                    BorderBrush = System.Windows.Media.Brushes.White
+                };
+
+                // Attach an event handler to the delete button
+                deleteButton.Click += DeleteButton_Click;
+
+                var dockPanel = new DockPanel();
+                DockPanel.SetDock(deleteButton, Dock.Right); // Position the delete button on the right
+                dockPanel.Children.Add(deleteButton);
+                dockPanel.Children.Add(noteTextBlock); // The TextBlock fills the remaining space
 
                 var noteBorder = new Border
                 {
@@ -91,10 +111,25 @@ namespace Image_Viewer
                     BorderThickness = new Thickness(1),
                     CornerRadius = new CornerRadius(8),
                     Margin = new Thickness(5),
-                    Child = noteTextBlock
+                    Child = dockPanel
                 };
+                deleteButton.Tag = note;
 
                 NotesStackPanel.Children.Add(noteBorder);
+            }
+        }
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button deleteButton)
+            {
+                var noteToDelete = deleteButton.Tag.ToString();
+                var nameOfImg = imageName; // You need to determine how to obtain the associated image name here
+
+                // Remove the note
+                notesManager.RemoveNoteForImage(nameOfImg, noteToDelete);
+
+                // Refresh the display
+                DisplayNotesForImage(nameOfImg);
             }
         }
     }

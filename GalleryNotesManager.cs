@@ -57,5 +57,18 @@ namespace Image_Viewer
                 imageNotes = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(json);
             }
         }
+        public void RemoveNoteForImage(string imageName, string note)
+        {
+            if (imageNotes.ContainsKey(imageName))
+            {
+                imageNotes[imageName].Remove(note);
+
+                // Optionally, remove the key if there are no more notes for the image
+                if (!imageNotes[imageName].Any())
+                {
+                    imageNotes.Remove(imageName);
+                }
+            }
+        }
     }
 }
