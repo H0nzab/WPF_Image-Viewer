@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -132,5 +133,47 @@ namespace Image_Viewer
                 DisplayNotesForImage(nameOfImg);
             }
         }
+
+        private void saveImgBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (DisplayedImage != null) // Assuming 'selectedImage' is your Image control
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "PNG Image|*.png|JPEG Image|*.jpg|Bitmap Image|*.bmp",
+                    Title = "Save Image"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string filePath = saveFileDialog.FileName;
+
+                    try
+                    {
+                        BitmapSource bitmapSource = (BitmapSource)DisplayedImage.Source;
+
+                        BitmapEncoder encoder = new PngBitmapEncoder(); // Change encoder as per user's choice
+                        encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+                        // Save the Bitmap to the specified file path
+                        using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            encoder.Save(fileStream);
+                        }
+
+                        MessageBox.Show("Image saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to save the image. Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No image selected!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
     }
 }

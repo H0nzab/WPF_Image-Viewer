@@ -22,7 +22,10 @@
             <ColumnDefinition Width="20"/>
         </Grid.ColumnDefinitions>
 
-        <Button x:Name="chooseImageBtn" Grid.Column="3" Grid.Row="2" Height="40" Width="100" Content="Choose Image" Click="chooseImageBtn_Click"></Button>
+        <DockPanel Grid.Column="3" Grid.Row="2" Width="250" VerticalAlignment="Center">
+            <Button x:Name="chooseImageBtn" Grid.Column="3" Grid.Row="2" Height="40" Width="100" Content="Choose Image" Click="chooseImageBtn_Click"/>
+            <Button x:Name="saveImgBtn" Content="Save Image" Grid.Column="3" Grid.Row="2" Height="40" Width="100" Click="saveImgBtn_Click"></Button>
+        </DockPanel>
         <DockPanel Height="300" Width="300" Grid.Column="3" Grid.Row="1">
             <Image x:Name="DisplayedImage" Grid.Column="3" Grid.Row="1" Stretch="Uniform"/>
         </DockPanel>
@@ -34,13 +37,14 @@
         <ScrollViewer Grid.Column="5" Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel x:Name="NotesStackPanel" Orientation="Vertical" Margin="10">
                 <DockPanel>
+                    <!--
                     <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8">
-                        <DockPanel>
-                            
-                            <TextBlock Height="50" Width="100" TextAlignment="Center" TextWrapping="Wrap" Margin="5"></TextBlock>
-                            <Button Height="20" Width="15" Margin="2" Content="X" HorizontalAlignment="Right" VerticalAlignment="Top" Background="White" BorderBrush="White"/>
-                        </DockPanel>
-                    </Border>
+                    <DockPanel>
+                    <TextBlock Height="50" Width="100" TextAlignment="Center" TextWrapping="Wrap" Margin="5"></TextBlock>
+                        <Button Height="20" Width="15" Margin="2" Content="X" HorizontalAlignment="Right" VerticalAlignment="Top" Background="White" BorderBrush="White"/>
+                    </DockPanel>
+                     </Border>
+                     -->
                 </DockPanel>
             </StackPanel>
         </ScrollViewer>
