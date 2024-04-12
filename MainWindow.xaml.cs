@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Image_Viewer
 {
@@ -23,6 +25,8 @@ namespace Image_Viewer
     public partial class MainWindow : Window
     {
         private readonly GalleryNotesManager notesManager;
+        private double scale = 1.0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -131,6 +135,112 @@ namespace Image_Viewer
                 // Refresh the display
                 DisplayNotesForImage(nameOfImg);
             }
+        }
+
+        private void saveImgBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (DisplayedImage != null) // Assuming 'selectedImage' is your Image control
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "PNG Image|*.png|JPEG Image|*.jpg|Bitmap Image|*.bmp",
+                    Title = "Save Image"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string filePath = saveFileDialog.FileName;
+
+                    try
+                    {
+                        BitmapSource bitmapSource = (BitmapSource)DisplayedImage.Source;
+
+                        BitmapEncoder encoder = new PngBitmapEncoder(); // Change encoder as per user's choice
+                        encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+                        // Save the Bitmap to the specified file path
+                        using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            encoder.Save(fileStream);
+                        }
+
+                        MessageBox.Show("Image saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to save the image. Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No image selected!", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void rotLBtn_Click(object sender, RoutedEventArgs e)
+        {
+            TransformGroup transformGroup = (TransformGroup)DisplayedImage.RenderTransform;
+
+            RotateTransform rotateTransform = null;
+            foreach (var transform in transformGroup.Children)
+            {
+                if (transform is RotateTransform)
+                {
+                    rotateTransform = (RotateTransform)transform;
+                    break;
+                }
+            }
+
+            // If RotateTransform is found, accumulate the rotation angle
+            if (rotateTransform != null)
+            {
+                rotateTransform.Angle -= 90;
+                if (rotateTransform.Angle >= 360)
+                {
+                    rotateTransform.Angle = 0;
+                }
+            }
+        }
+
+        private void rotRBtn_Click(object sender, RoutedEventArgs e)
+        {
+            TransformGroup transformGroup = (TransformGroup)DisplayedImage.RenderTransform;
+
+            RotateTransform rotateTransform = null;
+            foreach (var transform in transformGroup.Children)
+            {
+                if (transform is RotateTransform)
+                {
+                    rotateTransform = (RotateTransform)transform;
+                    break;
+                }
+            }
+
+            // If RotateTransform is found, accumulate the rotation angle
+            if (rotateTransform != null)
+            {
+                rotateTransform.Angle += 90;
+                if (rotateTransform.Angle >= 360)
+                {
+                    rotateTransform.Angle = 0;
+                }
+            }
+        }
+
+        private void crop_Click(object sender, RoutedEventArgs e)
+        {
+            var rect = new Int32Rect(50, 50, 100, 100); // Crop dimensions
+            CroppedBitmap cb = new CroppedBitmap(
+                (BitmapSource)DisplayedImage.Source,
+                rect);
+            DisplayedImage.Source = cb;
+        }
+
+        private void zoomBtn_Click(object sender, RoutedEventArgs e)
+        {
+            scale += 0.1; // Zoom increment
+            DisplayedImage.LayoutTransform = new ScaleTransform(scale, scale);
         }
     }
 }
