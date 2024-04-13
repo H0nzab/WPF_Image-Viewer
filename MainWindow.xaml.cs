@@ -27,14 +27,9 @@ namespace Image_Viewer
     {
         private readonly GalleryNotesManager notesManager;
 
-        //private Rectangle croppingRectangle;
-        //private Thumb topLeft, topRight, bottomLeft, bottomRight;
-        //private Point _startPoint;
-        //private bool _isDragging;
-
         private CroppingTool croppingTool;
 
-        private double scale = 1.0;
+        private bool isZoomEnabled = false;
 
         public MainWindow()
         {
@@ -42,6 +37,8 @@ namespace Image_Viewer
             notesManager = new GalleryNotesManager();
 
             croppingTool = new CroppingTool(OverlayCanvas);
+
+            DisplayedImage.MouseWheel += DisplayedImage_MouseWheel;
         }
         public string imageName;
 
@@ -252,56 +249,6 @@ namespace Image_Viewer
                 croppingTool.ShowCroppingTools(); // This should show the rectangle and thumbs for a new cropping session
             }
         }
-        //private void HideCroppingTools()
-        //{
-        //    croppingRectangle.Visibility = Visibility.Collapsed;  // Hide the rectangle
-
-        //    // Hide all thumbs
-        //    topLeft.Visibility = Visibility.Collapsed;
-        //    topRight.Visibility = Visibility.Collapsed;
-        //    bottomLeft.Visibility = Visibility.Collapsed;
-        //    bottomRight.Visibility = Visibility.Collapsed;
-        //}
-        //private void ShowCroppingTools()
-        //{
-        //    if (croppingRectangle != null)
-        //    {
-        //        croppingRectangle.Visibility = Visibility.Visible;  // Show the rectangle
-
-        //        // Show all thumbs
-        //        topLeft.Visibility = Visibility.Visible;
-        //        topRight.Visibility = Visibility.Visible;
-        //        bottomLeft.Visibility = Visibility.Visible;
-        //        bottomRight.Visibility = Visibility.Visible;
-
-        //        // Ensure they are correctly positioned around the rectangle
-        //        PositionThumbs();
-        //    }
-        //    else
-        //    {
-        //        // If the rectangle hasn't been created yet, create it and add thumbs
-        //        CreateCroppingRectangle();
-        //        AddThumbs();
-        //    }
-        //}
-        //private void CreateCroppingRectangle()
-        //{
-        //    croppingRectangle = new Rectangle
-        //    {
-        //        Stroke = Brushes.Blue,
-        //        StrokeThickness = 2,
-        //        Width = 100,
-        //        Height = 100,
-        //        Visibility = Visibility.Visible
-        //    };
-
-        //    OverlayCanvas.Children.Add(croppingRectangle);
-        //    Canvas.SetLeft(croppingRectangle, 50);  // Initial position
-        //    Canvas.SetTop(croppingRectangle, 50);   // Initial position
-        //    croppingRectangle.MouseLeftButtonDown += CroppingRectangle_MouseLeftButtonDown;
-        //    croppingRectangle.MouseMove += CroppingRectangle_MouseMove;
-        //    croppingRectangle.MouseLeftButtonUp += CroppingRectangle_MouseLeftButtonUp;
-        //}
         private void CropImage()
         {
             var rect = new Rect(Canvas.GetLeft(croppingTool.croppingRectangle), Canvas.GetTop(croppingTool.croppingRectangle), croppingTool.croppingRectangle.Width, croppingTool.croppingRectangle.Height);
@@ -321,185 +268,46 @@ namespace Image_Viewer
             croppingTool.HideCroppingTools();
         }
 
-        //private void CroppingRectangle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    var rect = sender as Rectangle;
-        //    _startPoint = e.GetPosition(OverlayCanvas);
-        //    rect.CaptureMouse();
-        //    _isDragging = true;
-        //}
-
-        //private void CroppingRectangle_MouseMove(object sender, MouseEventArgs e)
-        //{
-        //    if (_isDragging && sender is Rectangle rect)
-        //    {
-        //        Point currentPoint = e.GetPosition(OverlayCanvas);
-        //        double offsetX = currentPoint.X - _startPoint.X;
-        //        double offsetY = currentPoint.Y - _startPoint.Y;
-
-        //        double newLeft = Math.Max(0, Canvas.GetLeft(rect) + offsetX);
-        //        double newTop = Math.Max(0, Canvas.GetTop(rect) + offsetY);
-
-        //        // Prevent the rectangle from moving outside the right boundary
-        //        if (newLeft + rect.Width > OverlayCanvas.ActualWidth)
-        //        {
-        //            newLeft = OverlayCanvas.ActualWidth - rect.Width;
-        //        }
-
-        //        // Prevent the rectangle from moving outside the bottom boundary
-        //        if (newTop + rect.Height > OverlayCanvas.ActualHeight)
-        //        {
-        //            newTop = OverlayCanvas.ActualHeight - rect.Height;
-        //        }
-
-        //        Canvas.SetLeft(rect, newLeft);
-        //        Canvas.SetTop(rect, newTop);
-        //        _startPoint = currentPoint;
-
-        //        PositionThumbs();
-        //    }
-        //}
-
-        //private void CroppingRectangle_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        //{
-        //    var rect = sender as Rectangle;
-        //    rect.ReleaseMouseCapture();
-        //    _isDragging = false;
-        //}
-        //private void AddThumbs()
-        //{
-        //    InitializeOrReuseThumbs();
-
-        //    // Attach event handlers every time thumbs are initialized or reused
-        //    AttachResizeHandler(topLeft, HorizontalAlignment.Left, VerticalAlignment.Top);
-        //    AttachResizeHandler(topRight, HorizontalAlignment.Right, VerticalAlignment.Top);
-        //    AttachResizeHandler(bottomLeft, HorizontalAlignment.Left, VerticalAlignment.Bottom);
-        //    AttachResizeHandler(bottomRight, HorizontalAlignment.Right, VerticalAlignment.Bottom);
-
-        //    PositionThumbs();
-        //}
-        //private void InitializeOrReuseThumbs()
-        //{
-        //    // Check and create thumbs if they do not already exist
-        //    topLeft ??= CreateThumb(Brushes.Red, Cursors.SizeNWSE);
-        //    topRight ??= CreateThumb(Brushes.Red, Cursors.SizeNESW);
-        //    bottomLeft ??= CreateThumb(Brushes.Red, Cursors.SizeNESW);
-        //    bottomRight ??= CreateThumb(Brushes.Red, Cursors.SizeNWSE);
-
-        //    // Ensure thumbs are added to canvas only if they are not already part of it
-        //    AddThumbToCanvas(topLeft);
-        //    AddThumbToCanvas(topRight);
-        //    AddThumbToCanvas(bottomLeft);
-        //    AddThumbToCanvas(bottomRight);
-        //}
-        //private Thumb CreateThumb(SolidColorBrush background, Cursor cursor)
-        //{
-        //    return new Thumb
-        //    {
-        //        Width = 10,
-        //        Height = 10,
-        //        Background = background,
-        //        Cursor = cursor
-        //    };
-        //}
-        //private void AddThumbToCanvas(Thumb thumb)
-        //{
-        //    // Check if the thumb is already a child of the OverlayCanvas and remove it first if it is
-        //    if (OverlayCanvas.Children.Contains(thumb))
-        //        OverlayCanvas.Children.Remove(thumb);
-
-        //    OverlayCanvas.Children.Add(thumb);
-        //}
-
-        //private void PositionThumbs()
-        //{
-        //    if (croppingRectangle != null)
-        //    {
-        //        // Correctly calculate the positions based on the current state of croppingRectangle
-        //        Canvas.SetLeft(topLeft, Canvas.GetLeft(croppingRectangle) - topLeft.Width / 2);
-        //        Canvas.SetTop(topLeft, Canvas.GetTop(croppingRectangle) - topLeft.Height / 2);
-
-        //        Canvas.SetLeft(topRight, Canvas.GetLeft(croppingRectangle) + croppingRectangle.Width - topRight.Width / 2);
-        //        Canvas.SetTop(topRight, Canvas.GetTop(croppingRectangle) - topRight.Height / 2);
-
-        //        Canvas.SetLeft(bottomLeft, Canvas.GetLeft(croppingRectangle) - bottomLeft.Width / 2);
-        //        Canvas.SetTop(bottomLeft, Canvas.GetTop(croppingRectangle) + croppingRectangle.Height - bottomLeft.Height / 2);
-
-        //        Canvas.SetLeft(bottomRight, Canvas.GetLeft(croppingRectangle) + croppingRectangle.Width - bottomRight.Width / 2);
-        //        Canvas.SetTop(bottomRight, Canvas.GetTop(croppingRectangle) + croppingRectangle.Height - bottomRight.Height / 2);
-        //    }
-        //}
-
-        //private void AttachResizeHandler(Thumb thumb, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
-        //{
-        //    thumb.DragDelta += (sender, e) =>
-        //    {
-        //        if (!(sender is Thumb handle))
-        //            return;
-
-        //        double originalWidth = croppingRectangle.Width;
-        //        double originalHeight = croppingRectangle.Height;
-        //        double newX = Canvas.GetLeft(croppingRectangle);
-        //        double newY = Canvas.GetTop(croppingRectangle);
-
-        //        // Handling right resizing thumb
-        //        if (horizontalAlignment == HorizontalAlignment.Right)
-        //        {
-        //            double newWidth = originalWidth + e.HorizontalChange;
-        //            // Restrict the new width to a minimum and within the canvas bounds
-        //            if (newWidth > 10 && newX + newWidth <= OverlayCanvas.ActualWidth)
-        //            {
-        //                croppingRectangle.Width = newWidth;
-        //            }
-        //        }
-        //        // Handling left resizing thumb
-        //        else if (horizontalAlignment == HorizontalAlignment.Left)
-        //        {
-        //            double newWidth = originalWidth - e.HorizontalChange;
-        //            if (newWidth > 10)
-        //            {
-        //                newX = newX + e.HorizontalChange;
-        //                if (newX >= 0 && newX + newWidth <= OverlayCanvas.ActualWidth)  // Ensure the new X is within bounds
-        //                {
-        //                    croppingRectangle.Width = newWidth;
-        //                    Canvas.SetLeft(croppingRectangle, newX);
-        //                }
-        //            }
-        //        }
-
-        //        // Handling bottom resizing thumb
-        //        if (verticalAlignment == VerticalAlignment.Bottom)
-        //        {
-        //            double newHeight = originalHeight + e.VerticalChange;
-        //            // Restrict the new height to a minimum and within the canvas bounds
-        //            if (newHeight > 10 && newY + newHeight <= OverlayCanvas.ActualHeight)
-        //            {
-        //                croppingRectangle.Height = newHeight;
-        //            }
-        //        }
-        //        // Handling top resizing thumb
-        //        else if (verticalAlignment == VerticalAlignment.Top)
-        //        {
-        //            double newHeight = originalHeight - e.VerticalChange;
-        //            if (newHeight > 10)
-        //            {
-        //                newY = newY + e.VerticalChange;
-        //                if (newY >= 0 && newY + newHeight <= OverlayCanvas.ActualHeight)  // Ensure the new Y is within bounds
-        //                {
-        //                    croppingRectangle.Height = newHeight;
-        //                    Canvas.SetTop(croppingRectangle, newY);
-        //                }
-        //            }
-        //        }
-
-        //        PositionThumbs(); // Update the thumbs' positions after adjusting the rectangle
-        //    };
-        //}
+        // Konec sekce
 
         private void zoomBtn_Click(object sender, RoutedEventArgs e)
         {
-            scale += 0.1;
-            DisplayedImage.LayoutTransform = new ScaleTransform(scale, scale);
+            isZoomEnabled = !isZoomEnabled;
+            DisplayedImage.Focus();
+            zoomBtn.Tag = isZoomEnabled ? "Active" : "Inactive";
+        }
+
+        private void DisplayedImage_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (!isZoomEnabled) return;
+
+            var scaleTransform = (ScaleTransform)((TransformGroup)DisplayedImage.RenderTransform).Children[0];
+
+            double zoomFactor = e.Delta > 0 ? 1.1 : 0.9;
+            double newScaleX = scaleTransform.ScaleX * zoomFactor;
+            double newScaleY = scaleTransform.ScaleY * zoomFactor;
+
+            // Assuming initial sizes are captured somewhere as originalWidth and originalHeight
+            double newWidth = DisplayedImage.ActualWidth * newScaleX;
+            double newHeight = DisplayedImage.ActualHeight * newScaleY;
+
+            // Check if the new dimensions exceed the container's dimensions
+            if (newWidth > DisplayedImage.MaxWidth || newHeight > DisplayedImage.MaxHeight)
+            {
+                // If they do, calculate the maximum possible scale while staying within the bounds
+                double scaleXToFit = DisplayedImage.MaxWidth / DisplayedImage.ActualWidth;
+                double scaleYToFit = DisplayedImage.MaxHeight / DisplayedImage.ActualHeight;
+                double maxScale = Math.Min(scaleXToFit, scaleYToFit);
+
+                scaleTransform.ScaleX = maxScale;
+                scaleTransform.ScaleY = maxScale;
+            }
+            else
+            {
+                // Apply the new scale
+                scaleTransform.ScaleX = newScaleX;
+                scaleTransform.ScaleY = newScaleY;
+            }
         }
     }
 }

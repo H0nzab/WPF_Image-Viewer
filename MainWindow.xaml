@@ -7,6 +7,27 @@
         xmlns:controls="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+
+    <Window.Resources>
+        <Style x:Key="ToggleZoomButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Style.Triggers>
+                <Trigger Property="Tag" Value="Active">
+                    <Setter Property="Background" Value="DarkGreen"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>
+                <Trigger Property="Tag" Value="Inactive">
+                    <Setter Property="Background" Value="DarkRed"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -28,14 +49,17 @@
             <Button x:Name="saveImgBtn" Content="Save Image" Grid.Column="3" Grid.Row="2" Height="40" Width="100" Click="saveImgBtn_Click"></Button>
         </DockPanel>
         <Grid x:Name="imgGrid" Grid.Column="3" Grid.Row="1" Height="300" Width="300">
-            <Image x:Name="DisplayedImage" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
-                <Image.RenderTransform>
-                    <TransformGroup>
-                        <RotateTransform Angle="0"/>
-                    </TransformGroup>
-                </Image.RenderTransform>
-            </Image>
-            <Canvas x:Name="OverlayCanvas" Background="Transparent"/>
+            <Viewbox StretchDirection="Both">
+                <Image x:Name="DisplayedImage" ClipToBounds="True" Stretch="Uniform" RenderTransformOrigin="0.5,0.5" Focusable="True" MouseWheel="DisplayedImage_MouseWheel">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="1" ScaleY="1"/>
+                            <RotateTransform Angle="0"/>
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </Viewbox>
+            <Canvas x:Name="OverlayCanvas" Background="Transparent" IsHitTestVisible="False"/>
         </Grid>
         <DockPanel Grid.Column="3">
             <TextBlock x:Name="NameOfImage" Grid.Column="3" Grid.Row="0" Height="20" Width="180" HorizontalAlignment="Left" Margin="10"/>
@@ -43,7 +67,7 @@
                 <Button x:Name="rotLBtn" Width="35" Height="30" Content="Rot L" Click="rotLBtn_Click"/>
                 <Button x:Name="rotRBtn" Width="35" Height="30" Margin="10" Content="Rot R" Click="rotRBtn_Click"/>
                 <Button x:Name="crop" Width="35" Height="30" Margin="10" Content="Crop" Click="crop_Click"/>
-                <Button x:Name="zoomBtn" Width="35" Height="30" Content="Zoom" Click="zoomBtn_Click"/>
+                <Button x:Name="zoomBtn" Width="35" Height="30" Content="Zoom" Click="zoomBtn_Click" Style="{StaticResource ToggleZoomButtonStyle}" Tag="Inactive"/>
             </DockPanel>
         </DockPanel>
         <StackPanel Grid.Column="1" Grid.Row="1"/>

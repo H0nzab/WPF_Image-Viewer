@@ -5,6 +5,12 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
+
+//
+// Následující sekce je dělaná s velikou pomocí ChatGPT
+// Vyskytl se problém, že ořezávání je mnohem těžší, než jsem si myslel
+// Nechám zde i komentáře kódu, které mi k tomu napsal
+//
 public class CroppingTool
 {
     public Rectangle croppingRectangle;
