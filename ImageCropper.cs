@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -73,7 +74,6 @@ public class CroppingTool
         bottomLeft = CreateThumb(Brushes.Red, Cursors.SizeNESW);
         bottomRight = CreateThumb(Brushes.Red, Cursors.SizeNWSE);
 
-        // Set initial visibility to collapsed
         topLeft.Visibility = Visibility.Collapsed;
         topRight.Visibility = Visibility.Collapsed;
         bottomLeft.Visibility = Visibility.Collapsed;
@@ -104,7 +104,7 @@ public class CroppingTool
                 if (horizontalAlignment == HorizontalAlignment.Right)
                 {
                     double newWidth = originalWidth + e.HorizontalChange;
-                    if (newWidth > 10) // Minimum width constraint
+                    if (newWidth > 10)
                     {
                         croppingRectangle.Width = newWidth;
                     }
@@ -112,10 +112,10 @@ public class CroppingTool
                 else if (horizontalAlignment == HorizontalAlignment.Left)
                 {
                     double newWidth = originalWidth - e.HorizontalChange;
-                    if (newWidth > 10) // Minimum width constraint
+                    if (newWidth > 10)
                     {
                         newX += e.HorizontalChange;
-                        if (newX >= 0) // Ensure the new X is within bounds
+                        if (newX >= 0)
                         {
                             croppingRectangle.Width = newWidth;
                             Canvas.SetLeft(croppingRectangle, newX);
@@ -126,7 +126,7 @@ public class CroppingTool
                 if (verticalAlignment == VerticalAlignment.Bottom)
                 {
                     double newHeight = originalHeight + e.VerticalChange;
-                    if (newHeight > 10) // Minimum height constraint
+                    if (newHeight > 10)
                     {
                         croppingRectangle.Height = newHeight;
                     }
@@ -134,17 +134,16 @@ public class CroppingTool
                 else if (verticalAlignment == VerticalAlignment.Top)
                 {
                     double newHeight = originalHeight - e.VerticalChange;
-                    if (newHeight > 10) // Minimum height constraint
+                    if (newHeight > 10)
                     {
                         newY += e.VerticalChange;
-                        if (newY >= 0) // Ensure the new Y is within bounds
+                        if (newY >= 0)
                         {
                             croppingRectangle.Height = newHeight;
                             Canvas.SetTop(croppingRectangle, newY);
                         }
                     }
                 }
-
                 PositionThumbs();
             }
         };
@@ -192,7 +191,30 @@ public class CroppingTool
     {
         if (_isDragging && sender is Rectangle rect)
         {
-            // Similar logic as provided in your MainWindow for moving the rectangle
+            Point currentPoint = e.GetPosition(OverlayCanvas);
+            double offsetX = currentPoint.X - _startPoint.X;
+            double offsetY = currentPoint.Y - _startPoint.Y;
+
+            double newLeft = Math.Max(0, Canvas.GetLeft(rect) + offsetX);
+            double newTop = Math.Max(0, Canvas.GetTop(rect) + offsetY);
+
+            // Prevent the rectangle from moving outside the right boundary
+            if (newLeft + rect.Width > OverlayCanvas.ActualWidth)
+            {
+                newLeft = OverlayCanvas.ActualWidth - rect.Width;
+            }
+
+            // Prevent the rectangle from moving outside the bottom boundary
+            if (newTop + rect.Height > OverlayCanvas.ActualHeight)
+            {
+                newTop = OverlayCanvas.ActualHeight - rect.Height;
+            }
+
+            Canvas.SetLeft(rect, newLeft);
+            Canvas.SetTop(rect, newTop);
+            _startPoint = currentPoint;
+
+            PositionThumbs();
         }
     }
 
