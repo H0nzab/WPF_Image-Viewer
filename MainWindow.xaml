@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Image_Viewer"
+        xmlns:controls="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
@@ -26,17 +27,18 @@
             <Button x:Name="chooseImageBtn" Grid.Column="3" Grid.Row="2" Height="40" Width="100" Content="Choose Image" Click="chooseImageBtn_Click"/>
             <Button x:Name="saveImgBtn" Content="Save Image" Grid.Column="3" Grid.Row="2" Height="40" Width="100" Click="saveImgBtn_Click"></Button>
         </DockPanel>
-        <DockPanel Height="300" Width="300" Grid.Column="3" Grid.Row="1">
-            <Image x:Name="DisplayedImage" Grid.Column="3" Grid.Row="1" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="imgGrid" Grid.Column="3" Grid.Row="1" Height="300" Width="300">
+            <Image x:Name="DisplayedImage" Stretch="Uniform" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <RotateTransform Angle="0"/>
                     </TransformGroup>
                 </Image.RenderTransform>
             </Image>
-        </DockPanel>
+            <Canvas x:Name="OverlayCanvas" Background="Transparent"/>
+        </Grid>
         <DockPanel Grid.Column="3">
-            <TextBlock x:Name="NameOfImage" Grid.Column="3" Grid.Row="0" Height="20" Width="200" HorizontalAlignment="Left" Margin="10"/>
+            <TextBlock x:Name="NameOfImage" Grid.Column="3" Grid.Row="0" Height="20" Width="180" HorizontalAlignment="Left" Margin="10"/>
             <DockPanel>
                 <Button x:Name="rotLBtn" Width="35" Height="30" Content="Rot L" Click="rotLBtn_Click"/>
                 <Button x:Name="rotRBtn" Width="35" Height="30" Margin="10" Content="Rot R" Click="rotRBtn_Click"/>
