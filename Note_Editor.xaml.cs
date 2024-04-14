@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace Image_Viewer
 {
-    /// <summary>
-    /// Interakční logika pro Note_Editor.xaml
-    /// </summary>
     public partial class Note_Editor : Window
     {
         public string NoteText => TexboxNote.Text;

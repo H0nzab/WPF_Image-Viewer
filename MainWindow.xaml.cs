@@ -217,12 +217,6 @@ namespace Image_Viewer
             }
         }
 
-        //
-        // Následující sekce je dělaná s velikou pomocí ChatGPT
-        // Vyskytl se problém, že ořezávání je mnohem těžší, než jsem si myslel
-        // Nechám zde i komentáře kódu, které mi k tomu napsal
-        //
-
         private void crop_Click(object sender, RoutedEventArgs e)
         {
             if (croppingTool.croppingRectangle.Visibility == Visibility.Visible)
