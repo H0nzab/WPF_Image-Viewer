@@ -40,7 +40,7 @@ namespace Image_Viewer
                 return notes;
             }
 
-            return new List<string>(); // Return an empty list if no notes are found
+            return new List<string>();
         }
 
         private void SaveNotes()
@@ -63,11 +63,12 @@ namespace Image_Viewer
             {
                 imageNotes[imageName].Remove(note);
 
-                // Optionally, remove the key if there are no more notes for the image
                 if (!imageNotes[imageName].Any())
                 {
                     imageNotes.Remove(imageName);
                 }
+
+                SaveNotes();
             }
         }
     }

@@ -97,11 +97,11 @@ namespace Image_Viewer
                     Margin = new Thickness(2),
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Top,
-                    Background = System.Windows.Media.Brushes.White,
-                    BorderBrush = System.Windows.Media.Brushes.White
+                    Background = Brushes.White,
+                    BorderBrush = Brushes.White
                 };
-
                 deleteButton.Click += DeleteButton_Click;
+                deleteButton.Tag = note;
 
                 var dockPanel = new DockPanel();
                 DockPanel.SetDock(deleteButton, Dock.Right);
@@ -110,27 +110,22 @@ namespace Image_Viewer
 
                 var noteBorder = new Border
                 {
-                    BorderBrush = System.Windows.Media.Brushes.Black,
+                    BorderBrush = Brushes.Black,
                     BorderThickness = new Thickness(1),
                     CornerRadius = new CornerRadius(8),
                     Margin = new Thickness(5),
                     Child = dockPanel
                 };
-                deleteButton.Tag = note;
 
                 NotesStackPanel.Children.Add(noteBorder);
             }
         }
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button deleteButton)
+            if (sender is Button deleteButton && deleteButton.Tag is string noteToDelete)
             {
-                var noteToDelete = deleteButton.Tag.ToString();
-                var nameOfImg = imageName;
-
-                notesManager.RemoveNoteForImage(nameOfImg, noteToDelete);
-
-                DisplayNotesForImage(nameOfImg);
+                notesManager.RemoveNoteForImage(imageName, noteToDelete);
+                DisplayNotesForImage(imageName);
             }
         }
 
